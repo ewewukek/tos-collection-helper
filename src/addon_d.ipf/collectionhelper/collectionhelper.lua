@@ -11,7 +11,7 @@ end
 function COLLECTIONHELPER.GET_FULL_NAME(itemobj, ...)
 
     local color = COLLECTIONHELPER.getItemColor(itemobj)
-    local name = _G['__GET_FULL_NAME'](itemobj, ...)
+    local name = _G['GET_FULL_NAME_OLD'](itemobj, ...)
 
     return string.format("{#%s}{ol}%s{/}{/}", color, name)
 
