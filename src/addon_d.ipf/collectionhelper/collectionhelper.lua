@@ -39,26 +39,21 @@ local function buildItemRequirements ()
         while true do
             j = j + 1
 
-            local class_name = TryGetProp(collection, "ItemName_"..j)
-            if class_name == nil or class_name == "None" then
+            local item_id = TryGetProp(collection, "ItemName_"..j)
+            if item_id == nil or item_id == "None" then
                 break
             end
 
-            local item_class = GetClass("Item", class_name)
-            if item_class == nil then
-                break
-            end
-
-            addCollectionRequirement(item_class.ClassID, collection.ClassID)
+            addCollectionRequirement(item_id, collection.ClassName)
         end
     end
 end
 
-local function countRequiredForCollections (item_id, collections)
+local function countRequiredForCollections (item_id, id_count_list)
     local player_collections = session.GetMySession():GetCollection()
     local required = 0
 
-    for _, col_req in ipairs(collections) do
+    for _, col_req in ipairs(id_count_list) do
         local pl_col = player_collections:Get(col_req.id)
         if pl_col ~= nil then
             local col_info = geCollectionTable.Get(col_req.id)
@@ -86,10 +81,10 @@ local function countRequired (item_id)
     return required
 end
 
-local function GET_FULL_NAME (item_class, ...)
-    local name = _G['GET_FULL_NAME_OLD'](item_class, ...)
+local function GET_FULL_NAME (item, ...)
+    local name = _G['GET_FULL_NAME_OLD'](item, ...)
 
-    local required = countRequired(item_class.ClassID)
+    local required = countRequired(item.ClassName)
     if required == 0 then
         return name
     end
