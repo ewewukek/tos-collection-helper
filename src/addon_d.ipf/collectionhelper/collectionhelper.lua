@@ -1,15 +1,17 @@
 local acutil = require('acutil')
 
-local item_requirements = {}
+_G["COLLECTIONHELPER"] = _G["COLLECTIONHELPER"] or {}
+local ch = _G["COLLECTIONHELPER"]
+ch.item_requirements = {}
 
 local function makeItemRequirement (item_id)
-    if item_requirements[item_id] == nil then
-        item_requirements[item_id] = {
+    if ch.item_requirements[item_id] == nil then
+        ch.item_requirements[item_id] = {
             collections = {},
             crafts = {},
         }
     end
-    return item_requirements[item_id]
+    return ch.item_requirements[item_id]
 end
 
 local function addCollectionRequirement (item_id, collection_id)
@@ -72,7 +74,7 @@ local function countRequiredForCollections (item_id, collections)
 end
 
 local function countRequired (item_id)
-    local item_req = item_requirements[item_id]
+    local item_req = ch.item_requirements[item_id]
     if item_req == nil then
         return 0
     end
