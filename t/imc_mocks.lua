@@ -1,7 +1,7 @@
 class_lists = {}
 class_tables = {}
 
-function add_object (class, name, object)
+function add_object (class, name)
     class_lists[class] = class_lists[class] or {}
     local list = class_lists[class]
 
@@ -12,10 +12,11 @@ function add_object (class, name, object)
         error(class.." "..name.." already registered")
     end
 
-    object = {table.unpack(object or {})}
-    object.ClassID = #list + 1
-    object.ClassName = name
-    object.Name = name
+    local object = {
+        ClassID = #list + 1,
+        ClassName = name,
+        Name = name,
+    }
 
     table.insert(list, object)
     tabl[name] = object
@@ -24,10 +25,25 @@ function add_object (class, name, object)
 end
 
 function add_collection (name, ...)
-    local col = add_object("Collection", name)
+    local collection = add_object("Collection", name)
     for i, item_name in ipairs({...}) do
-        col["ItemName_"..i] = item_name
+        collection["ItemName_"..i] = item_name
     end
+    return collection
+end
+
+function add_recipe (result_name, ...)
+    local recipe = add_object("Recipe", "r_"..result_name)
+    recipe.TargetItem = add_object("Item", result_name)
+    local args = {...}
+    if #args % 2 ~= 0 then
+        error("add_recipe: odd number of arguments")
+    end
+    for i = 1, #args / 2 do
+        recipe["Item_"..i.."_1"] = args[i * 2 - 1]
+        recipe["Item_"..i.."_1_count"] = args[i * 2]
+    end
+    return recipe
 end
 
 function GetClassList (name)
