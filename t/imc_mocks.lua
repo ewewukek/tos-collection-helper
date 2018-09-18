@@ -1,5 +1,7 @@
-class_lists = {}
-class_tables = {}
+function reset_classes()
+    class_lists = {}
+    class_tables = {}
+end
 
 function add_object (class, name, strict)
     class_lists[class] = class_lists[class] or {}
