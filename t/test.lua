@@ -3,35 +3,37 @@ function dump (val) print(inspect(val)) end
 cmp_deeply = require("cmp_deeply")
 require("imc_mocks")
 
-add_collection("col_01", "itm_01", "itm_02")
+function test_case (name, prepare, expected_data)
+    reset_classes()
 
-add_recipe("craft_01", "itm_01", 10)
-add_collection("col_02", "craft_01")
+    io.write(name.."...")
 
-dofile("../src/addon_d.ipf/collectionhelper/collectionhelper.lua")
-COLLECTIONHELPER_ON_INIT()
-local ch = COLLECTIONHELPER;
+    for _, fncall in ipairs(prepare) do
+        local fn = table.remove(fncall, 1)
+        fn(unpack(fncall))
+    end
 
-cmp_deeply(ch.collection_items, {
-    itm_01 = {{
-        id = "col_01",
-        count = 1,
-    }},
-    itm_02 = {{
-        id = "col_01",
-        count = 1,
-    }},
-    craft_01 = {{
-        id = "col_02",
-        count = 1,
-    }},
+    dofile("../src/addon_d.ipf/collectionhelper/collectionhelper.lua")
+    COLLECTIONHELPER_ON_INIT()
+    ch = COLLECTIONHELPER;
+
+    for property, value in pairs(expected_data) do
+        cmp_deeply(ch[property], value)
+    end
+
+    print("ok")
+end
+
+test_case(
+    "single item collection", {
+    {add_collection, "col", "itm"},
+}, {
+    collection_items = {
+        itm = {{
+            id = "col",
+            count = 1,
+        }},
+    },
 })
 
-cmp_deeply(ch.craft_items, {
-    itm_01 = {{
-        id = "craft_01",
-        count = 10,
-    }},
-})
-
-print("test pass")
+print("all tests passed")
