@@ -11,7 +11,6 @@ function acutil.setupHook (newFunction, hookedFunctionStr)
 end
 
 function acutil.log (msg)
-    print(msg)
 end
 
 return acutil;
