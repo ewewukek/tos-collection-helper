@@ -34,7 +34,7 @@ end
 
 function add_recipe (result_name, ...)
     local recipe = add_object("Recipe", "r_"..result_name)
-    recipe.TargetItem = add_object("Item", result_name)
+    recipe.TargetItem = result_name
     local args = {...}
     if #args % 2 ~= 0 then
         error("add_recipe: odd number of arguments")
