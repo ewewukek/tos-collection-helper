@@ -5,37 +5,29 @@ local ch = _G["COLLECTIONHELPER"]
 ch.collection_items = {}
 ch.craft_items = {}
 
-local function addCollectionRequirement (item_id, collection_id)
-    ch.collection_items[item_id] = ch.collection_items[item_id] or {}
-    local id_count_list = ch.collection_items[item_id]
+local function addRequirement (map, item_id, id, count)
+    map[item_id] = map[item_id] or {}
+    local id_count_list = map[item_id]
 
-    for _, col_req in ipairs(id_count_list) do
-        if col_req.id == collection_id then
-            col_req.count = col_req.count + 1
+    for _, rec in ipairs(id_count_list) do
+        if rec.id == id then
+            rec.count = col_req.count + count
             return
         end
     end
 
     table.insert(id_count_list, {
-        id = collection_id,
-        count = 1,
+        id = id,
+        count = count,
     })
 end
 
+local function addCollectionRequirement (item_id, collection_id)
+    addRequirement(ch.collection_items, item_id, collection_id, 1)
+end
+
 local function addCraftRequirement (item_id, count, craft_id)
-    ch.craft_items[item_id] = ch.craft_items[item_id] or {}
-    local id_count_list = ch.craft_items[item_id]
-
-    for _, rec in ipairs(id_count_list) do
-        if rec.id == craft_id then
-            rec.count = rec.count + count
-        end
-    end
-
-    table.insert(id_count_list, {
-        id = craft_id,
-        count = count,
-    })
+    addRequirement(ch.craft_items, item_id, craft_id, count)
 end
 
 local function buildCraftRequirements (recipe, recipe_map)
