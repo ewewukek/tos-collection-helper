@@ -9,20 +9,17 @@ add_collection("col_01", "itm_01", "itm_02")
 
 dofile("../src/addon_d.ipf/collectionhelper/collectionhelper.lua")
 COLLECTIONHELPER_ON_INIT()
+local ch = COLLECTIONHELPER;
 
-cmp_deeply(COLLECTIONHELPER.item_requirements, {
-    itm_01 = {
-        collections = {{
-            id = "col_01",
-            count = 1,
-        }},
-        crafts = {},
-    },
-    itm_02 = {
-        collections = {{
-            id = "col_01",
-            count = 1,
-        }},
-        crafts = {},
-    },
+cmp_deeply(ch.collection_items, {
+    itm_01 = {{
+        id = "col_01",
+        count = 1,
+    }},
+    itm_02 = {{
+        id = "col_01",
+        count = 1,
+    }},
 })
+
+print("test pass")

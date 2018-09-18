@@ -2,29 +2,20 @@ local acutil = require('acutil')
 
 _G["COLLECTIONHELPER"] = _G["COLLECTIONHELPER"] or {}
 local ch = _G["COLLECTIONHELPER"]
-ch.item_requirements = {}
-
-local function makeItemRequirement (item_id)
-    if ch.item_requirements[item_id] == nil then
-        ch.item_requirements[item_id] = {
-            collections = {},
-            crafts = {},
-        }
-    end
-    return ch.item_requirements[item_id]
-end
+ch.collection_items = {}
 
 local function addCollectionRequirement (item_id, collection_id)
-    local item_req = makeItemRequirement(item_id)
+    ch.collection_items[item_id] = ch.collection_items[item_id] or {}
+    local id_count_list = ch.collection_items[item_id]
 
-    for _, col_req in ipairs(item_req.collections) do
+    for _, col_req in ipairs(id_count_list) do
         if col_req.id == collection_id then
             col_req.count = col_req.count + 1
             return
         end
     end
 
-    table.insert(item_req.collections, {
+    table.insert(id_count_list, {
         id = collection_id,
         count = 1,
     })
@@ -49,7 +40,12 @@ local function buildItemRequirements ()
     end
 end
 
-local function countRequiredForCollections (item_id, id_count_list)
+local function countRequiredForCollections (item_id)
+    local id_count_list = ch.collection_items[item_id]
+    if id_count_list == nil then
+        return 0
+    end
+
     local player_collections = session.GetMySession():GetCollection()
     local required = 0
 
@@ -69,14 +65,13 @@ local function countRequiredForCollections (item_id, id_count_list)
 end
 
 local function countRequired (item_id)
-    local item_req = ch.item_requirements[item_id]
-    if item_req == nil then
+    if ch.collection_items[item_id] == nil then
         return 0
     end
 
     local required = 0
 
-    required = required + countRequiredForCollections(item_id, item_req.collections)
+    required = required + countRequiredForCollections(item_id)
 
     return required
 end
