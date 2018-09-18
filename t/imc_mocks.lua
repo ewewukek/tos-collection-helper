@@ -69,3 +69,7 @@ end
 function TryGetProp (object, property)
     return object[property]
 end
+
+function GET_RECIPE_REQITEM_CNT (recipe, prop_name)
+    return recipe[prop_name.."_count"]
+end

@@ -5,8 +5,11 @@ require("imc_mocks")
 
 add_object("Item", "itm_01")
 add_object("Item", "itm_02")
-
 add_collection("col_01", "itm_01", "itm_02")
+
+add_object("Item", "craft_01")
+add_recipe("craft_01", "itm_01", 10)
+add_collection("col_02", "craft_01")
 
 dofile("../src/addon_d.ipf/collectionhelper/collectionhelper.lua")
 COLLECTIONHELPER_ON_INIT()
@@ -20,6 +23,17 @@ cmp_deeply(ch.collection_items, {
     itm_02 = {{
         id = "col_01",
         count = 1,
+    }},
+    craft_01 = {{
+        id = "col_02",
+        count = 1,
+    }},
+})
+
+cmp_deeply(ch.craft_items, {
+    itm_01 = {{
+        id = "craft_01",
+        count = 10,
     }},
 })
 

@@ -3,6 +3,7 @@ local acutil = require('acutil')
 _G["COLLECTIONHELPER"] = _G["COLLECTIONHELPER"] or {}
 local ch = _G["COLLECTIONHELPER"]
 ch.collection_items = {}
+ch.craft_items = {}
 
 local function addCollectionRequirement (item_id, collection_id)
     ch.collection_items[item_id] = ch.collection_items[item_id] or {}
@@ -21,7 +22,59 @@ local function addCollectionRequirement (item_id, collection_id)
     })
 end
 
+local function addCraftRequirement (item_id, count, craft_id)
+    ch.craft_items[item_id] = ch.craft_items[item_id] or {}
+    local id_count_list = ch.craft_items[item_id]
+
+    for _, rec in ipairs(id_count_list) do
+        if rec.id == craft_id then
+            rec.count = rec.count + count
+        end
+    end
+
+    table.insert(id_count_list, {
+        id = craft_id,
+        count = count,
+    })
+end
+
+local function buildCraftRequirements (recipe, recipe_map)
+    for j = 1, 5 do
+        local prop_name = "Item_"..j.."_1"
+
+        local item_id = recipe[prop_name]
+        local item = GetClass("Item", item_id)
+        if item == nil or item == "None" or item.NotExist == 'YES'
+        or item.ItemType == 'Unused' or item.GroupName == 'Unused' then
+            break
+        end
+
+        local count = GET_RECIPE_REQITEM_CNT(recipe, prop_name)
+        addCraftRequirement(item_id, count, recipe.TargetItem)
+
+        local subrecipe = recipe_map[item_id]
+        if subrecipe ~= nil then
+            buildCraftRequirements(subrecipe, recipe_map)
+        end
+    end
+end
+
 local function buildItemRequirements ()
+    local recipe_map = {}
+
+    -- "Recipe_ItemCraft" and "ItemTradeShop doesn't contain collectable item recipes
+    local recipes, recipe_count = GetClassList("Recipe")
+    for i = 0, recipe_count - 1 do
+        local recipe = GetClassByIndexFromList(recipes, i)
+
+        local result_item = GetClass("Item", recipe.TargetItem)
+        if result_item == nil or result_item.NotExist == 'YES' or result_item.ItemType == 'Unused' then
+            break
+        end
+
+        recipe_map[result_item.ClassName] = recipe
+    end
+
     local list, size = GetClassList("Collection");
     for i = 0, size - 1 do
         local collection = GetClassByIndexFromList(list, i)
@@ -36,6 +89,12 @@ local function buildItemRequirements ()
             end
 
             addCollectionRequirement(item_id, collection.ClassName)
+        end
+    end
+
+    for _, recipe in pairs(recipe_map) do
+        if ch.collection_items[recipe.TargetItem] ~= nil then
+            buildCraftRequirements(recipe, recipe_map)
         end
     end
 end
