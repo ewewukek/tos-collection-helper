@@ -3,11 +3,8 @@ function dump (val) print(inspect(val)) end
 cmp_deeply = require("cmp_deeply")
 require("imc_mocks")
 
-add_object("Item", "itm_01")
-add_object("Item", "itm_02")
 add_collection("col_01", "itm_01", "itm_02")
 
-add_object("Item", "craft_01")
 add_recipe("craft_01", "itm_01", 10)
 add_collection("col_02", "craft_01")
 
