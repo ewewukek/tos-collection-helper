@@ -116,7 +116,7 @@ local function countRequiredForCollections (item_id)
     return required
 end
 
-local function countRequired (item_id)
+function ch.countRequired (item_id)
     if ch.collection_items[item_id] == nil then
         return 0
     end
@@ -131,7 +131,7 @@ end
 local function GET_FULL_NAME (item, ...)
     local name = _G['GET_FULL_NAME_OLD'](item, ...)
 
-    local required = countRequired(item.ClassName)
+    local required = ch.countRequired(item.ClassName)
     if required == 0 then
         return name
     end
