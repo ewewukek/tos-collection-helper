@@ -1,4 +1,5 @@
 inspect = require("inspect")
+function dump (val) print(inspect(val)) end
 cmp_deeply = require("cmp_deeply")
 require("imc_mocks")
 
