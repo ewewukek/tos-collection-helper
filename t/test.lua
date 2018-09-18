@@ -3,15 +3,19 @@ function dump (val) print(inspect(val)) end
 cmp_deeply = require("cmp_deeply")
 require("imc_mocks")
 
-function test_case (name, prepare, expected_data)
-    reset_classes()
-
-    io.write(name.."...")
-
-    for _, fncall in ipairs(prepare) do
+function execute_list (list)
+    for _, fncall in ipairs(list) do
         local fn = table.remove(fncall, 1)
         fn(unpack(fncall))
     end
+end
+
+function test_case (name, prepare, expected_data, player_prepare, count_tests)
+    imc_reset()
+
+    io.write(name.."...")
+
+    execute_list(prepare)
 
     dofile("../src/addon_d.ipf/collectionhelper/collectionhelper.lua")
     COLLECTIONHELPER_ON_INIT()
@@ -20,6 +24,8 @@ function test_case (name, prepare, expected_data)
     local cmp = function (a, b)
         return a.id < b.id
     end
+
+xpcall(function()
 
     for _, property in ipairs({"collection_items", "craft_items"}) do
         if expected_data[property] ~= nil then
@@ -30,17 +36,33 @@ function test_case (name, prepare, expected_data)
                 table.sort(id_count_list, cmp)
             end
 
-            xpcall(function () cmp_deeply(got, expected_data[property]) end, function (err)
-                print("fail\n"..err)
-            end)
+            cmp_deeply(got, expected_data[property])
+        end
+    end
+
+    if player_prepare ~= nil then
+        execute_list(player_prepare)
+    end
+
+    if count_tests ~= nil then
+        for _, pair in ipairs(count_tests) do
+            local item = pair[1]
+            local got = ch.countRequired(item)
+            if got ~= pair[2] then
+                error("wrong countRequired for "..item.."\n     got: "..got.."\nexpected: "..pair[2])
+            end
         end
     end
 
     print("ok")
+
+end, function (err)
+    print("fail\n"..err.."\n")
+end)
 end
 
 test_case(
-"single item collection", {
+"single collection", {
     {add_collection, "col", "itm"},
 }, {
     collection_items = {
@@ -49,6 +71,24 @@ test_case(
             count = 1,
         }},
     },
+}, {
+    -- no player state
+}, {
+    {"unknown", 0},
+    {"itm", 1},
+})
+
+test_case(
+"partially finished collection", {
+    {add_collection, "col", "itm_a", "itm_b"},
+}, {
+    -- don't care about data
+}, {
+    {add_to_player_collection, "col", "itm_a"},
+}, {
+    {"unknown", 0},
+    {"itm_a", 0},
+    {"itm_b", 1},
 })
 
 test_case(
