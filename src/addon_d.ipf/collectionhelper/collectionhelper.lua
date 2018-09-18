@@ -11,7 +11,7 @@ local function addRequirement (map, item_id, id, count)
 
     for _, rec in ipairs(id_count_list) do
         if rec.id == id then
-            rec.count = col_req.count + count
+            rec.count = rec.count + count
             return
         end
     end
