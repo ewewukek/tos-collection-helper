@@ -49,6 +49,7 @@ local function buildCraftRequirements (recipe, recipe_map)
             buildCraftRequirements(subrecipe, recipe_map)
         end
     end
+    recipe_map[recipe.TargetItem] = nil -- prevent processing same recipe twice
 end
 
 local function buildItemRequirements ()
