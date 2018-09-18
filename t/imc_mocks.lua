@@ -107,7 +107,7 @@ function SessionCollections:Get (collection_id)
 end
 
 function SessionCollections:add (collection_id)
-    self["_"..collection_id] = setmetatable({items = {}}, {__index = PlayerCollection})
+    self["_"..collection_id] = PlayerCollection:new()
     return self["_"..collection_id]
 end
 
