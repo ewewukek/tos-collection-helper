@@ -107,7 +107,7 @@ test_case {
         itm = 10,
     },
     count_tests = {
-        {"unknown", nil, nil},
+        {"unknown", 0, 0},
         {"itm", 1, 0},
     },
 }
@@ -137,7 +137,7 @@ test_case {
         itm_b = 3,
     },
     count_tests = {
-        {"unknown", nil, nil},
+        {"unknown", 0, 0},
         {"itm_a", 1, 0},
         {"itm_b", 1, 1},
     },

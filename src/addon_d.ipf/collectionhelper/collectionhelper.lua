@@ -160,10 +160,6 @@ local function countRequiredForCrafts (item_id, inventory_counts)
 end
 
 function ch.countRequired (item_id, inventory_counts)
-    if ch.collection_items[item_id] == nil and ch.craft_items[item_id] == nil then
-        return nil
-    end
-
     inventory_counts = inventory_counts or fillInventoryCounts()
 
     local required = 0
@@ -177,10 +173,11 @@ end
 local function GET_FULL_NAME (item, ...)
     local name = _G['GET_FULL_NAME_OLD'](item, ...)
 
-    local required = ch.countRequired(item.ClassName)
-    if required == nil then
+    if ch.collection_items[item_id] == nil and ch.craft_items[item_id] == nil then
         return name
     end
+
+    local required = ch.countRequired(item.ClassName)
 
     local color = "800080"
     return string.format("{#%s}[ %s ]{/} %s", color, required, name)
