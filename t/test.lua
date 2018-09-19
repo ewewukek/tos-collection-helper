@@ -55,6 +55,7 @@ xpcall(function()
             local expected = pair[2]
             local got = ch.countRequired(item, {}) -- empty inventory_counts
             if got ~= expected then
+                if got == nil then got = 'nil' end
                 error("wrong countRequired (no state) for "..item.."\n     got: "..got.."\nexpected: "..expected)
             end
         end
@@ -73,6 +74,7 @@ xpcall(function()
             local expected = pair[3]
             local got = ch.countRequired(item, args.inventory_counts)
             if got ~= expected then
+                if got == nil then got = 'nil' end
                 error("wrong countRequired (with state) for "..item.."\n     got: "..got.."\nexpected: "..expected)
             end
         end
@@ -105,7 +107,7 @@ test_case {
         itm = 10,
     },
     count_tests = {
-        {"unknown", 0, 0},
+        {"unknown", nil, nil},
         {"itm", 1, 0},
     },
 }
@@ -135,7 +137,7 @@ test_case {
         itm_b = 3,
     },
     count_tests = {
-        {"unknown", 0, 0},
+        {"unknown", nil, nil},
         {"itm_a", 1, 0},
         {"itm_b", 1, 1},
     },
