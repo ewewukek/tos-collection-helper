@@ -45,6 +45,7 @@ xpcall(function()
     end
 
     if count_tests ~= nil then
+        io.write("count tests...")
         for _, pair in ipairs(count_tests) do
             local item = pair[1]
             local got = ch.countRequired(item)
@@ -62,7 +63,7 @@ end)
 end
 
 test_case(
-"single collection", {
+"simple collection", {
     {add_collection, "col", "itm"},
 }, {
     collection_items = {
@@ -188,6 +189,11 @@ test_case(
             count = 3,
         }},
     },
+}, {
+    -- no player state
+}, {
+    {"craft", 1},
+    {"itm", 3},
 })
 
 test_case(
@@ -216,6 +222,13 @@ test_case(
             count = 4,
         }},
     },
+}, {
+    -- no player state
+}, {
+    {"craft", 1},
+    {"subcraft", 2},
+    {"itm_a", 6},
+    {"itm_b", 8},
 })
 
 test_case(
@@ -251,6 +264,14 @@ test_case(
             count = 4,
         }},
     },
+}, {
+    -- no player state
+}, {
+    {"craft_1", 1},
+    {"craft_2", 1},
+    {"itm_a", 4},
+    {"itm_b", 2},
+    {"itm_c", 4},
 })
 
 test_case(
@@ -270,6 +291,11 @@ test_case(
             count = 1,
         }},
     },
+}, {
+    -- no player data
+}, {
+    {"craft", 2},
+    {"itm", 2},
 })
 
 test_case(
@@ -299,6 +325,12 @@ test_case(
             count = 3,
         }},
     },
+}, {
+    -- no player data
+}, {
+    {"craft", 1},
+    {"subcraft", 3},
+    {"itm", 9},
 })
 
 print("all tests passed")

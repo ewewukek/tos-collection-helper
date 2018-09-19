@@ -116,14 +116,35 @@ local function countRequiredForCollections (item_id)
     return required
 end
 
+local function countRequiredForCrafts (item_id)
+    local id_count_list = ch.craft_items[item_id]
+    if id_count_list == nil then
+        return 0
+    end
+
+    local required = 0
+
+    for _, rec in ipairs(id_count_list) do
+        local item_id = rec.id
+        local item_required = ch.countRequired(item_id)
+        -- item_required = item_required - countInInventory(item_id)
+        if item_required > 0 then
+            required = required + (rec.count * item_required)
+        end
+    end
+
+    return required
+end
+
 function ch.countRequired (item_id)
-    if ch.collection_items[item_id] == nil then
+    if ch.collection_items[item_id] == nil and ch.craft_items[item_id] == nil then
         return 0
     end
 
     local required = 0
 
     required = required + countRequiredForCollections(item_id)
+    required = required + countRequiredForCrafts(item_id)
 
     return required
 end
