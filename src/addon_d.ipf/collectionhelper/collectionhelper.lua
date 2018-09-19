@@ -160,8 +160,6 @@ local function countRequiredForCrafts (item_id, inventory_counts)
 end
 
 function ch.countRequired (item_id, inventory_counts)
-    inventory_counts = inventory_counts or fillInventoryCounts()
-
     local required = 0
 
     required = required + countRequiredForCollections(item_id)
@@ -177,10 +175,17 @@ local function GET_FULL_NAME (item, ...)
         return name
     end
 
-    local required = ch.countRequired(item.ClassName)
+    local inventory_counts = fillInventoryCounts()
+    local required = ch.countRequired(item.ClassName, inventory_counts)
+
+    local have = inventory_counts[item.ClassName] or 0
+    if have > required then have = required end
 
     local color = "800080"
-    return string.format("{#%s}[ %s ]{/} %s", color, required, name)
+    if required == 0 then
+        return string.format("{#%s}[{/}0{#%s}]{/} %s", color, color, name)
+    end
+    return string.format("{#%s}[{/}%s{#%s}/{/}%s{#%s}]{/} %s", color, have, color, required, color, name)
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
