@@ -116,8 +116,8 @@ local function countRequiredForCollections (item_id)
     return required
 end
 
-local function countInInventory (item_id)
-    local count = 0
+local function fillInventoryCounts ()
+    local inventory_counts = {}
     local list = session.GetInvItemList()
 
     local index = list:Head()
@@ -128,16 +128,15 @@ local function countInInventory (item_id)
 
         local slot = list:Element(index)
         local item = GetIES(slot:GetObject())
-        if item.ClassName == item_id then
-            count = count + slot.count
-        end
+        local item_id = item.ClassName
+        inventory_counts[item_id] = (inventory_counts[item_id] or 0) + slot.count
         index = list:Next(index)
     end
 
-    return count
+    return inventory_counts
 end
 
-local function countRequiredForCrafts (item_id)
+local function countRequiredForCrafts (item_id, inventory_counts)
     local id_count_list = ch.craft_items[item_id]
     if id_count_list == nil then
         return 0
@@ -147,8 +146,8 @@ local function countRequiredForCrafts (item_id)
 
     for _, rec in ipairs(id_count_list) do
         local item_id = rec.id
-        local item_required = ch.countRequired(item_id)
-        item_required = item_required - countInInventory(item_id)
+        local item_required = ch.countRequired(item_id, inventory_counts)
+        item_required = item_required - (inventory_counts[item_id] or 0)
         if item_required > 0 then
             required = required + (rec.count * item_required)
         end
@@ -157,15 +156,17 @@ local function countRequiredForCrafts (item_id)
     return required
 end
 
-function ch.countRequired (item_id)
+function ch.countRequired (item_id, inventory_counts)
     if ch.collection_items[item_id] == nil and ch.craft_items[item_id] == nil then
         return 0
     end
 
+    inventory_counts = inventory_counts or fillInventoryCounts()
+
     local required = 0
 
     required = required + countRequiredForCollections(item_id)
-    required = required + countRequiredForCrafts(item_id)
+    required = required + countRequiredForCrafts(item_id, inventory_counts)
 
     return required
 end
