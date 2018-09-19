@@ -173,7 +173,7 @@ end
 local function GET_FULL_NAME (item, ...)
     local name = _G['GET_FULL_NAME_OLD'](item, ...)
 
-    if ch.collection_items[item_id] == nil and ch.craft_items[item_id] == nil then
+    if ch.collection_items[item.ClassName] == nil and ch.craft_items[item.ClassName] == nil then
         return name
     end
 
