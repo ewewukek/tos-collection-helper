@@ -182,12 +182,8 @@ local function GET_FULL_NAME (item, ...)
         return name
     end
 
-    local color1 = "FF40FF"
-    local color2 = "FFA0FF"
-    if required == 0 then
-        return string.format("{#%s}%s{/}", color2, name)
-    end
-    return string.format("{#%s}[ %s ]{/} {#%s}%s{/}", color1, required, color2, name)
+    local color = "800080"
+    return string.format("{#%s}[ %s ]{/} %s", color, required, name)
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
