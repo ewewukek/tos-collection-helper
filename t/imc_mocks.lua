@@ -56,9 +56,11 @@ function add_recipe (result_name, ...)
     return recipe
 end
 
-function add_to_player_collection (collection_id, item_id)
+function add_to_player_collection (collection_id, ...)
     local pl_col = session.collections:add(collection_id)
-    pl_col:add(item_id)
+    for _, item_id in ipairs({...}) do
+        pl_col:add(item_id)
+    end
 end
 
 function add_to_player_inventory (item_id, count)
