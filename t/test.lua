@@ -72,7 +72,7 @@ xpcall(function()
         for _, pair in ipairs(args.count_tests) do
             local item = pair[1]
             local expected = pair[3]
-            local got = ch.countRequired(item, args.inventory_counts)
+            local got = ch.countRequired(item, args.inventory_counts or {})
             if got ~= expected then
                 if got == nil then got = 'nil' end
                 error("wrong countRequired (with state) for "..item.."\n     got: "..got.."\nexpected: "..expected)
