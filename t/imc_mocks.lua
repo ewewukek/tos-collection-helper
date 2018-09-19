@@ -47,15 +47,11 @@ end
 function add_recipe (result_name, ...)
     local recipe = add_object("Recipe", "r_"..result_name)
     recipe.TargetItem = result_name
-    local args = {...}
-    if #args % 2 ~= 0 then
-        error("add_recipe: odd number of arguments")
-    end
-    for i = 1, #args / 2 do
-        local item_name = args[i * 2 - 1]
+    for i, pair in ipairs({...}) do
+        local item_name = pair[1]
         add_object("Item", item_name)
         recipe["Item_"..i.."_1"] = item_name
-        recipe["Item_"..i.."_1_count"] = args[i * 2]
+        recipe["Item_"..i.."_1_count"] = pair[2]
     end
     return recipe
 end

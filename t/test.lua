@@ -174,7 +174,7 @@ test_case(
 
 test_case(
 "craft in collection", {
-    {add_recipe, "craft", "itm", 3},
+    {add_recipe, "craft", {"itm", 3}},
     {add_collection, "col", "craft"},
 }, {
     collection_items = {
@@ -198,8 +198,8 @@ test_case(
 
 test_case(
 "nested craft in collection", {
-    {add_recipe, "craft", "subcraft", 2},
-    {add_recipe, "subcraft", "itm_a", 3, "itm_b", 4},
+    {add_recipe, "craft", {"subcraft", 2}},
+    {add_recipe, "subcraft", {"itm_a", 3}, {"itm_b", 4}},
     {add_collection, "col", "craft"},
 }, {
     collection_items = {
@@ -233,8 +233,8 @@ test_case(
 
 test_case(
 "item in two collection crafts", {
-    {add_recipe, "craft_1", "itm_a", 1, "itm_b", 2},
-    {add_recipe, "craft_2", "itm_a", 3, "itm_c", 4},
+    {add_recipe, "craft_1", {"itm_a", 1}, {"itm_b", 2}},
+    {add_recipe, "craft_2", {"itm_a", 3}, {"itm_c", 4}},
     {add_collection, "crafts", "craft_1", "craft_2"},
 }, {
     collection_items = {
@@ -276,7 +276,7 @@ test_case(
 
 test_case(
 "same crafts in collection", {
-    {add_recipe, "craft", "itm", 1},
+    {add_recipe, "craft", {"itm", 1}},
     {add_collection, "col", "craft", "craft"},
 }, {
     collection_items = {
@@ -300,8 +300,8 @@ test_case(
 
 test_case(
 "craft and subcraft in collection", {
-    {add_recipe, "craft", "subcraft", 2},
-    {add_recipe, "subcraft", "itm", 3},
+    {add_recipe, "craft", {"subcraft", 2}},
+    {add_recipe, "subcraft", {"itm", 3}},
     {add_collection, "col", "craft"},
     {add_collection, "subcol", "subcraft"},
 }, {
