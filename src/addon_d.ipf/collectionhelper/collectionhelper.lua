@@ -116,6 +116,27 @@ local function countRequiredForCollections (item_id)
     return required
 end
 
+local function countInInventory (item_id)
+    local count = 0
+    local list = session.GetInvItemList()
+
+    local index = list:Head()
+    while true do
+        if index == list:InvalidIndex() then
+            break
+        end
+
+        local slot = list:Element(index)
+        local item = GetIES(slot:GetObject())
+        if item.ClassName == item_id then
+            count = count + slot.count
+        end
+        index = list:Next(index)
+    end
+
+    return count
+end
+
 local function countRequiredForCrafts (item_id)
     local id_count_list = ch.craft_items[item_id]
     if id_count_list == nil then
@@ -127,7 +148,7 @@ local function countRequiredForCrafts (item_id)
     for _, rec in ipairs(id_count_list) do
         local item_id = rec.id
         local item_required = ch.countRequired(item_id)
-        -- item_required = item_required - countInInventory(item_id)
+        item_required = item_required - countInInventory(item_id)
         if item_required > 0 then
             required = required + (rec.count * item_required)
         end

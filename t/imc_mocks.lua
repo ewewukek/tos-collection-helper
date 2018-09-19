@@ -61,6 +61,11 @@ function add_to_player_collection (collection_id, item_id)
     pl_col:add(item_id)
 end
 
+function add_to_player_inventory (item_id, count)
+    count = count or 1
+    session.inventory:add(InventorySlot:new("Item", item_id, count))
+end
+
 -- imc compatible classes
 
 CollectionInfo = inherits(nil)
@@ -109,18 +114,71 @@ end
 
 ---
 
+InventorySlot = inherits(nil)
+
+function InventorySlot:init (class, id, count)
+    self.class = class
+    self.id = id
+    self.count = count
+end
+
+function InventorySlot:GetObject ()
+    return GetClass (self.class, self.id)
+end
+
+---
+
+IndexedList = inherits(nil)
+
+function IndexedList:init ()
+    self.list = {}
+end
+
+function IndexedList:add (value)
+    table.insert(self.list, value)
+end
+
+function IndexedList:Head ()
+    if #self.list == 0 then
+        return self.InvalidIndex()
+    end
+    return 1
+end
+
+function IndexedList:InvalidIndex ()
+    return -1
+end
+
+function IndexedList:Element (index)
+    return self.list[index]
+end
+
+function IndexedList:Next (index)
+    if index >= #self.list then
+        return self.InvalidIndex()
+    end
+    return index + 1
+end
+
+---
+
 Session = inherits(nil)
 
 function Session:init ()
     self.collections = SessionCollections:new()
+    self.inventory = IndexedList:new()
 end
 
-function Session:GetMySession ()
+function Session.GetMySession ()
     return session
 end
 
 function Session:GetCollection ()
     return session.collections
+end
+
+function Session.GetInvItemList ()
+    return session.inventory
 end
 
 -- imc's global functions and tables
@@ -158,3 +216,7 @@ geCollectionTable = {
         return geCollectionTable.collections[collection_id]
     end,
 }
+
+function GetIES (object)
+    return object
+end

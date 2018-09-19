@@ -292,10 +292,10 @@ test_case(
         }},
     },
 }, {
-    -- no player data
+    {add_to_player_inventory, "craft", 1},
 }, {
     {"craft", 2},
-    {"itm", 2},
+    {"itm", 1},
 })
 
 test_case(
