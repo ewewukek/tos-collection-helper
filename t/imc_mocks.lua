@@ -9,6 +9,10 @@ function imc_reset()
     session = Session:new() -- imc's global table
 end
 
+function class_id2name (class, id)
+    return class_lists[class][id].ClassName
+end
+
 function add_object (class, name, strict)
     class_lists[class] = class_lists[class] or {}
     local list = class_lists[class]
@@ -85,6 +89,7 @@ function CollectionInfo:GetTotalItemCount ()
 end
 
 function CollectionInfo:GetNeedItemCount (item_id)
+    item_id = class_id2name("Item", item_id)
     local count = 0
     for _, id in ipairs(self.items) do
         if id == item_id then
@@ -106,6 +111,7 @@ PlayerCollection.GetItemCountByType = CollectionInfo.GetNeedItemCount
 SessionCollections = inherits(nil)
 
 function SessionCollections:Get (collection_id)
+    collection_id = class_id2name("Collection", collection_id)
     return self["_"..collection_id]
 end
 
@@ -215,7 +221,7 @@ end
 
 geCollectionTable = {
     Get = function (collection_id)
-        return geCollectionTable.collections[collection_id]
+        return geCollectionTable.collections[class_id2name("Collection", collection_id)]
     end,
 }
 
