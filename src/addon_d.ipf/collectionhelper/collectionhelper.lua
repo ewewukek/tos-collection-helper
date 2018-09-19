@@ -2,6 +2,7 @@ local acutil = require('acutil')
 
 _G["COLLECTIONHELPER"] = _G["COLLECTIONHELPER"] or {}
 local ch = _G["COLLECTIONHELPER"]
+ch.loaded = false
 ch.collection_items = {}
 ch.craft_items = {}
 
@@ -189,7 +190,10 @@ local function GET_FULL_NAME (item, ...)
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
-    buildItemRequirements()
+    if not ch.loaded then
+        buildItemRequirements()
+        ch.loaded = true
+    end
     acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
     acutil.log("Collection helper loaded!")
 end
