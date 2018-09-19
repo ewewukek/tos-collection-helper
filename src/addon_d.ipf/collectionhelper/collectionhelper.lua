@@ -101,12 +101,15 @@ local function countRequiredForCollections (item_id)
     local player_collections = session.GetMySession():GetCollection()
     local required = 0
 
+    local item = GetClass("Item", item_id)
+
     for _, col_req in ipairs(id_count_list) do
-        local pl_col = player_collections:Get(col_req.id)
+        local collection = GetClass("Collection", col_req.id)
+        local pl_col = player_collections:Get(collection.ClassID)
         if pl_col ~= nil then
-            local col_info = geCollectionTable.Get(col_req.id)
+            local col_info = geCollectionTable.Get(collection.ClassID)
             if pl_col:GetItemCount() < col_info:GetTotalItemCount() then
-                required = required + col_info:GetNeedItemCount(item_id) - pl_col:GetItemCountByType(item_id)
+                required = required + col_info:GetNeedItemCount(item.ClassID) - pl_col:GetItemCountByType(item.ClassID)
             end
         else -- collection not registered yet
             required = required + col_req.count
