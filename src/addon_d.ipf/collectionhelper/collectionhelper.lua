@@ -178,15 +178,15 @@ local function GET_FULL_NAME (item, ...)
 
     local inventory_counts = fillInventoryCounts()
     local required = ch.countRequired(item.ClassName, inventory_counts)
-
     local have = inventory_counts[item.ClassName] or 0
-    if have > required then have = required end
 
-    local color = "800080"
     if required == 0 then
-        return string.format("{#%s}[{/}0{#%s}]{/} %s", color, color, name)
+        return string.format("{@st66b}{s20}({#00A000}0{/}){/}{/} %s", name)
+    elseif have < required then
+        return string.format("{@st66b}{s20}({#FFFF00}%s{/}/{#FFFF00}%s{/}){/}{/} %s", have, required, name)
+    else
+        return string.format("{@st66b}{s20}({#00FF00}%s{/}){/}{/}{/} %s", required, name)
     end
-    return string.format("{#%s}[{/}%s{#%s}/{/}%s{#%s}]{/} %s", color, have, color, required, color, name)
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
