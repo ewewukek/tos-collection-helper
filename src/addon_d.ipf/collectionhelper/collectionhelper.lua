@@ -2,9 +2,18 @@ local acutil = require('acutil')
 
 _G["COLLECTIONHELPER"] = _G["COLLECTIONHELPER"] or {}
 local ch = _G["COLLECTIONHELPER"]
-ch.loaded = false
+local loaded = false
 ch.collection_items = {}
 ch.craft_items = {}
+
+local config_file_path = '../addons/collectionhelper/collectionhelper.json'
+local config = { -- default configuration
+    show_no_longer_required_items = true,
+    no_longer_required_tpl        = "{@st66b}{s20}({#00A000}0{/}){/}{/} %s",
+    have_lt_required_tpl          = "{@st66b}{s20}({#FFFF00}%s{/}/{#FFFF00}%s{/}){/}{/} %s",
+    have_ge_required_tpl          = "{@st66b}{s20}({#00FF00}%s{/}){/}{/}{/} %s",
+    version                       = 1,
+}
 
 local function addRequirement (map, item_id, id, count)
     map[item_id] = map[item_id] or {}
@@ -181,19 +190,32 @@ local function GET_FULL_NAME (item, ...)
     local have = inventory_counts[item.ClassName] or 0
 
     if required == 0 then
-        return string.format("{@st66b}{s20}({#00A000}0{/}){/}{/} %s", name)
+        if not config.show_no_longer_required_items then
+            return name
+        end
+        return string.format(config.no_longer_required_tpl, name)
     elseif have < required then
-        return string.format("{@st66b}{s20}({#FFFF00}%s{/}/{#FFFF00}%s{/}){/}{/} %s", have, required, name)
+        return string.format(config.have_lt_required_tpl, have, required, name)
     else
-        return string.format("{@st66b}{s20}({#00FF00}%s{/}){/}{/}{/} %s", required, name)
+        return string.format(config.have_ge_required_tpl, required, name)
+    end
+end
+
+local function loadConfig ()
+    local stored, err = acutil.loadJSON(config_file_path, config)
+    if err or stored.version == nil or stored.version ~= config.version then
+        acutil.saveJSON(config_file_path, config)
+    else
+        config = stored
     end
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
-    if not ch.loaded then
+    if not loaded then
+        loadConfig()
         buildItemRequirements()
-        ch.loaded = true
+        acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
+        acutil.log("Collection helper loaded!")
+        loaded = true
     end
-    acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
-    acutil.log("Collection helper loaded!")
 end
