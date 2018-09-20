@@ -13,4 +13,11 @@ end
 function acutil.log (msg)
 end
 
+function acutil.loadJSON (path, dest)
+    return nil, "file not found"
+end
+
+function acutil.saveJSON (path, data)
+end
+
 return acutil;
