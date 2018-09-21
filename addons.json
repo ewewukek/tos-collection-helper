@@ -1,0 +1,18 @@
+[
+    {
+        "description": "Keeping track of items that are required to complete collections",
+        "file": "collectionhelper",
+        "unicode": "\u1f431",
+        "fileVersion": "v1.0.0",
+        "extension": "ipf",
+        "name": "Collection Helper",
+        "releaseTag": "v1.0.0",
+        "tags": [
+            "tooltip",
+            "ui",
+            "inventory",
+            "info",
+            "collection",
+        ]
+    }
+]
