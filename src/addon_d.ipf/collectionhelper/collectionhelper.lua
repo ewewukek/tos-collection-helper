@@ -211,11 +211,11 @@ local function loadConfig ()
 end
 
 function COLLECTIONHELPER_ON_INIT (addon, frame)
+    loadConfig()
     if not loaded then
-        loadConfig()
         buildItemRequirements()
         acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
-        acutil.log("Collection helper loaded!")
         loaded = true
     end
+    acutil.log("Collection helper loaded!")
 end
