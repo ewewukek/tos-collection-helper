@@ -2,7 +2,7 @@
     {
         "description": "Keeping track of items that are required to complete collections",
         "file": "collectionhelper",
-        "unicode": "\u{1f431}",
+        "unicode": "🐱",
         "fileVersion": "v1.0.0",
         "extension": "ipf",
         "name": "Collection Helper",
