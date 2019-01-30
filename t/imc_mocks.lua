@@ -136,36 +136,27 @@ end
 
 ---
 
-IndexedList = inherits(nil)
+List = inherits(nil)
 
-function IndexedList:init ()
+function List:init ()
     self.list = {}
 end
 
-function IndexedList:add (value)
+function List:add (value)
     table.insert(self.list, value)
 end
 
-function IndexedList:Head ()
-    if #self.list == 0 then
-        return self.InvalidIndex()
+function List:for_each (callback, reverse, ...)
+    if reverse then error('not supported') end
+    for item in self.list do
+        local ret = callback(self, item, ...)
+        if ret == 'end' then
+            return false
+        elseif ret == 'break' then
+            break
+        end
     end
-    return 1
-end
-
-function IndexedList:InvalidIndex ()
-    return -1
-end
-
-function IndexedList:Element (index)
-    return self.list[index]
-end
-
-function IndexedList:Next (index)
-    if index >= #self.list then
-        return self.InvalidIndex()
-    end
-    return index + 1
+    return true
 end
 
 ---
@@ -174,7 +165,7 @@ Session = inherits(nil)
 
 function Session:init ()
     self.collections = SessionCollections:new()
-    self.inventory = IndexedList:new()
+    self.inventory = List:new()
 end
 
 function Session.GetMySession ()
@@ -227,4 +218,8 @@ geCollectionTable = {
 
 function GetIES (object)
     return object
+end
+
+function FOR_EACH_INVENTORY(list, callback, reverse, ...)
+    return list:for_each(callback, reverse, ...)
 end

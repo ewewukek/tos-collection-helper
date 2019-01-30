@@ -133,18 +133,11 @@ local function fillInventoryCounts ()
     local inventory_counts = {}
     local list = session.GetInvItemList()
 
-    local index = list:Head()
-    while true do
-        if index == list:InvalidIndex() then
-            break
-        end
-
-        local slot = list:Element(index)
+    FOR_EACH_INVENTORY(list, function(list, slot)
         local item = GetIES(slot:GetObject())
         local item_id = item.ClassName
         inventory_counts[item_id] = (inventory_counts[item_id] or 0) + slot.count
-        index = list:Next(index)
-    end
+    end, false)
 
     return inventory_counts
 end
@@ -199,6 +192,7 @@ local function GET_FULL_NAME (item, ...)
     else
         return string.format(config.have_ge_required_tpl, required, name)
     end
+
 end
 
 local function loadConfig ()
