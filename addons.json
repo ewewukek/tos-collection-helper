@@ -3,10 +3,10 @@
         "description": "Keeping track of items that are required to complete collections",
         "file": "collectionhelper",
         "unicode": "🐱",
-        "fileVersion": "v1.0.1",
+        "fileVersion": "v1.1.0",
         "extension": "ipf",
         "name": "Collection Helper",
-        "releaseTag": "v1.0.1",
+        "releaseTag": "v1.1.0",
         "tags": [
             "tooltip",
             "ui",
