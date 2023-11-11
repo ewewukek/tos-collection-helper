@@ -71,11 +71,9 @@ local function buildItemRequirements ()
         local recipe = GetClassByIndexFromList(recipes, i)
 
         local result_item = GetClass("Item", recipe.TargetItem)
-        if result_item == nil or result_item.NotExist == 'YES' or result_item.ItemType == 'Unused' then
-            break
+        if result_item ~= nil and result_item.NotExist ~= 'YES' and result_item.ItemType ~= 'Unused' then
+            recipe_map[result_item.ClassName] = recipe
         end
-
-        recipe_map[result_item.ClassName] = recipe
     end
 
     local list, size = GetClassList("Collection");
