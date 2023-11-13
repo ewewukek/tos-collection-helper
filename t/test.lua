@@ -3,6 +3,8 @@ function dump (val) print(inspect(val)) end
 cmp_deeply = require("cmp_deeply")
 require("imc_mocks")
 
+unpack = table.unpack
+
 function execute_list (list)
     for _, fncall in ipairs(list) do
         local fn = table.remove(fncall, 1)
