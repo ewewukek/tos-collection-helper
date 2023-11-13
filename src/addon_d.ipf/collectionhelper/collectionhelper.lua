@@ -169,8 +169,19 @@ function ch.countRequired (item_id, inventory_counts)
     return required
 end
 
+local function LINK_ITEM_TEXT (...)
+    ch.inside_link_item_text = true
+    local ret = _G['LINK_ITEM_TEXT_OLD'](...)
+    ch.inside_link_item_text = false
+    return ret
+end
+
 local function GET_FULL_NAME (item, ...)
     local name = _G['GET_FULL_NAME_OLD'](item, ...)
+
+    if ch.inside_link_item_text then
+        return name
+    end
 
     if ch.collection_items[item.ClassName] == nil and ch.craft_items[item.ClassName] == nil then
         return name
@@ -207,7 +218,9 @@ function COLLECTIONHELPER_ON_INIT (addon, frame)
     if not loaded then
         buildItemRequirements()
         acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
+        acutil.setupHook(LINK_ITEM_TEXT, "LINK_ITEM_TEXT")
         loaded = true
     end
+
     acutil.log("Collection helper loaded!")
 end
