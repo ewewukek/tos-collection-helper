@@ -6,7 +6,6 @@ local loaded = false
 ch.collection_items = {}
 ch.craft_items = {}
 
-local config_file_path = '../addons/collectionhelper/collectionhelper.json'
 local config = { -- default configuration
     show_no_longer_required_items = true,
     no_longer_required_tpl        = "{@st66b}{s20}({#00A000}0{/}){/}{/} %s",
@@ -204,17 +203,7 @@ local function GET_FULL_NAME (item, ...)
 
 end
 
-local function loadConfig ()
-    local stored, err = acutil.loadJSON(config_file_path, config)
-    if err or stored.version == nil or stored.version ~= config.version then
-        acutil.saveJSON(config_file_path, config)
-    else
-        config = stored
-    end
-end
-
 function COLLECTIONHELPER_ON_INIT (addon, frame)
-    loadConfig()
     if not loaded then
         buildItemRequirements()
         acutil.setupHook(GET_FULL_NAME, "GET_FULL_NAME")
