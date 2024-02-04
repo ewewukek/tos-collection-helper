@@ -63,6 +63,25 @@ end
 
 local function buildItemRequirements ()
     local recipe_map = {}
+    local dropped_recipes = {
+        BRC01_134 = true,
+        BRC01_136 = true,
+        BRC01_139 = true,
+        BRC02_106 = true,
+        BRC02_111 = true,
+        CAN01_109 = true,
+        NECK01_131 = true,
+        NECK01_139 = true,
+        NECK01_141 = true,
+        NECK01_142 = true,
+        NECK01_143 = true,
+        NECK02_106 = true,
+        NECK02_108 = true,
+        NECK02_109 = true,
+        SPR01_104 = true,
+        STF01_109 = true,
+        TBW01_109 = true,
+    }
 
     -- "Recipe_ItemCraft" and "ItemTradeShop doesn't contain collectable item recipes
     local recipes, recipe_count = GetClassList("Recipe")
@@ -70,7 +89,8 @@ local function buildItemRequirements ()
         local recipe = GetClassByIndexFromList(recipes, i)
 
         local result_item = GetClass("Item", recipe.TargetItem)
-        if result_item ~= nil and result_item.NotExist ~= 'YES' and result_item.ItemType ~= 'Unused' then
+        if result_item ~= nil and result_item.NotExist ~= 'YES' and result_item.ItemType ~= 'Unused'
+        and dropped_recipes[result_item.ClassName] then
             recipe_map[result_item.ClassName] = recipe
         end
     end
