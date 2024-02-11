@@ -63,7 +63,8 @@ end
 
 local function buildItemRequirements ()
     local recipe_map = {}
-    local dropped_recipes = {
+    local available_recipes = {
+        BRC01_130 = true,
         BRC01_134 = true,
         BRC01_136 = true,
         BRC01_139 = true,
@@ -71,6 +72,7 @@ local function buildItemRequirements ()
         BRC02_111 = true,
         CAN01_109 = true,
         NECK01_131 = true,
+        NECK01_134 = true,
         NECK01_139 = true,
         NECK01_141 = true,
         NECK01_142 = true,
@@ -90,7 +92,7 @@ local function buildItemRequirements ()
 
         local result_item = GetClass("Item", recipe.TargetItem)
         if result_item ~= nil and result_item.NotExist ~= 'YES' and result_item.ItemType ~= 'Unused'
-        and dropped_recipes[result_item.ClassName] then
+        and available_recipes[result_item.ClassName] then
             recipe_map[result_item.ClassName] = recipe
         end
     end
